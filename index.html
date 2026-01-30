@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demon Hunter: Infernal Contracts</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=MedievalSharp&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cinzel', serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(139, 0, 0, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(75, 0, 130, 0.1) 0%, transparent 20%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(25, 25, 35, 0.9);
+            border: 2px solid #8b0000;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 30px rgba(139, 0, 0, 0.3);
+        }
+
+        /* Header Styles */
+        .game-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #8b0000;
+        }
+
+        .game-header h1 {
+            font-family: 'MedievalSharp', cursive;
+            font-size: 3.5rem;
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #8b0000;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #b0b0b0;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+        }
+
+        .player-stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat {
+            background: rgba(40, 40, 50, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            min-width: 200px;
+            border: 1px solid #444;
+        }
+
+        .stat-label {
+            display: block;
+            color: #ff6b6b;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .health-bar, .sanity-bar {
+            width: 100%;
+            height: 20px;
+            background: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 5px 0;
+            border: 1px solid #444;
+        }
+
+        .health-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff0000, #ff6b6b);
+            width: 100%;
+            transition: width 0.5s ease;
+        }
+
+        .sanity-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4a00e0, #8e2de2);
+            width: 100%;
+            transition: width 0.5s ease;
+        }
+
+        .gold-icon {
+            color: #ffd700;
+            margin-left: 5px;
+        }
+
+        /* Game Area Layout */
+        .game-area {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        /* Encounter Card */
+        .encounter-card {
+            background: rgba(30, 30, 40, 0.9);
+            border: 2px solid #8b0000;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 0 20px rgba(139, 0, 0, 0.2);
+        }
+
+        .encounter-card h2 {
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 2px solid #444;
+            padding-bottom: 10px;
+        }
+
+        .demon-display {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 25px;
+        }
+
+        .demon-icon {
+            font-size: 8rem;
+            color: #8b0000;
+            text-shadow: 0 0 15px #ff0000;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .demon-info h3 {
+            color: #ff4444;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .demon-type {
+            color: #b0b0b0;
+            margin-bottom: 15px;
+        }
+
+        .demon-health-bar {
+            height: 15px;
+            margin: 8px 0;
+        }
+
+        .demon-health-fill {
+            background: linear-gradient(90deg, #8b0000, #ff0000);
+        }
+
+        .weakness-icon {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .combat-log {
+            background: rgba(20, 20, 30, 0.8);
+            border: 1px solid #444;
+            border-radius: 10px;
+            padding: 15px;
+            height: 150px;
+            overflow-y: auto;
+            margin-top: 20px;
+            font-family: monospace;
+        }
+
+        .log-entry {
+            padding: 5px 0;
+            color: #8fbc8f;
+            border-bottom: 1px solid #333;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 18px 10px;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .attack-btn {
+            background: linear-gradient(135deg, #8b0000, #ff0000);
+            color: white;
+        }
+
+        .attack-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, #ff0000, #ff4444);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
+        }
+
+        .capture-btn {
+            background: linear-gradient(135deg, #4a00e0, #8e2de2);
+            color: white;
+        }
+
+        .capture-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, #8e2de2, #a64dff);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(142, 45, 226, 0.3);
+        }
+
+        .execute-btn {
+            background: linear-gradient(135deg, #333, #666);
+            color: white;
+        }
+
+        .execute-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, #444, #777);
+            transform: translateY(-2px);
+        }
+
+        .next-btn {
+            grid-column: span 2;
+            background: linear-gradient(135deg, #006400, #228b22);
+            color: white;
+        }
+
+        .next-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, #228b22, #32cd32);
+            transform: translateY(-2px);
+        }
+
+        /* Right Panel Cards */
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .inventory-card, .codex-card, .instructions-card {
+            background: rgba(30, 30, 40, 0.9);
+            border: 2px solid #444;
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .inventory-card h3, .codex-card h3, .instructions-card h3 {
+            color: #ff6b6b;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #444;
+            padding-bottom: 10px;
+        }
+
+        .inventory-items {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(40, 40, 50, 0.8);
+            border-radius: 8px;
+        }
+
+        .holy-icon { color: #ffd700; }
+        .binding-icon { color: #8e2de2; }
+
+        .codex-entries {
+            min-height: 200px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .demon-entry {
+            background: rgba(40, 40, 50, 0.8);
+            border: 1px solid #8b0000;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .demon-entry h4 {
+            color: #ff4444;
+            margin-bottom: 5px;
+        }
+
+        .instructions-card ul {
+            list-style: none;
+            padding-left: 10px;
+        }
+
+        .instructions-card li {
+            padding: 8px 0;
+            border-bottom: 1px solid #333;
+            color: #b0b0b0;
+        }
+
+        .instructions-card li:before {
+            content: '⚔️';
+            margin-right: 10px;
+        }
+
+        /* Contract Status */
+        .contract-status {
+            background: rgba(30, 30, 40, 0.9);
+            border: 2px solid #006400;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .contract-status h3 {
+            color: #32cd32;
+            margin-bottom: 15px;
+        }
+
+        .contract-details {
+            background: rgba(40, 40, 50, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .contract-rewards {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            color: #ffd700;
+        }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: rgba(25, 25, 35, 0.95);
+            border: 3px solid #8b0000;
+            border-radius: 15px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .modal-content h2 {
+            color: #ff0000;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+        }
+
+        .modal-content.victory {
+            border-color: #006400;
+        }
+
+        .modal-content.victory h2 {
+            color: #32cd32;
+        }
+
+        .restart-btn, .next-contract-btn {
+            background: linear-gradient(135deg, #8b0000, #ff0000);
+            color: white;
+            padding: 15px 30px;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .next-contract-btn {
+            background: linear-gradient(135deg, #006400, #228b22);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .game-area {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .demon-display {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .game-header h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .player-stats {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .stat {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="game-header">
+            <h1><i class="fas fa-fire"></i> DEMON HUNTER</h1>
+            <p class="subtitle">Infernal Contracts</p>
+            <div class="player-stats">
+                <div class="stat">
+                    <span class="stat-label">Health:</span>
+                    <div class="health-bar">
+                        <div class="health-fill" id="healthFill"></div>
+                    </div>
+                    <span id="healthValue">100</span>/100
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Sanity:</span>
+                    <div class="sanity-bar">
+                        <div class="sanity-fill" id="sanityFill"></div>
+                    </div>
+                    <span id="sanityValue">100</span>/100
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Gold:</span>
+                    <span id="goldValue">500</span> <i class="fas fa-coins gold-icon"></i>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Demons Captured:</span>
+                    <span id="capturedValue">0</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Game Area -->
+        <main class="game-area">
+            <div class="left-panel">
+                <!-- Demon Encounter -->
+                <div class="encounter-card" id="demonCard">
+                    <h2><i class="fas fa-skull-crossbones"></i> DEMON ENCOUNTER</h2>
+                    <div class="demon-display">
+                        <div class="demon-icon" id="demonIcon">
+                            <i class="fas fa-ghost"></i>
+                        </div>
+                        <div class="demon-info">
+                            <h3 id="demonName">Shadow Imp</h3>
+                            <div class="demon-type" id="demonType">Type: Lesser Demon</div>
+                            <div class="demon-health">
+                                <span>Health:</span>
+                                <div class="health-bar demon-health-bar">
+                                    <div class="health-fill demon-health-fill" id="demonHealthFill"></div>
+                                </div>
+                                <span id="demonHealthValue">100</span>/100
+                            </div>
+                            <div class="demon-weakness">
+                                <span>Weakness: </span>
+                                <span class="weakness-icon" id="demonWeakness"><i class="fas fa-sun"></i> Holy</span>
+                            </div>
+                            <div class="demon-sanity-drain">
+                                <span>Sanity Drain: </span>
+                                <span id="sanityDrainValue">5</span>/turn
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Combat Log -->
+                    <div class="combat-log" id="combatLog">
+                        <div class="log-entry">You encounter a Shadow Imp!</div>
+                        <div class="log-entry">Prepare for battle...</div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn attack-btn" id="attackBtn">
+                        <i class="fas fa-crosshairs"></i> Attack
+                    </button>
+                    <button class="btn capture-btn" id="captureBtn" disabled>
+                        <i class="fas fa-handcuffs"></i> Attempt Capture
+                    </button>
+                    <button class="btn execute-btn" id="executeBtn" disabled>
+                        <i class="fas fa-skull"></i> Execute
+                    </button>
+                    <button class="btn next-btn" id="nextBtn">
+                        <i class="fas fa-forward"></i> Next Contract
+                    </button>
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <!-- Player Inventory -->
+                <div class="inventory-card">
+                    <h3><i class="fas fa-backpack"></i> INVENTORY</h3>
+                    <div class="inventory-items">
+                        <div class="item">
+                            <i class="fas fa-cross holy-icon"></i>
+                            <span>Holy Water: </span>
+                            <span id="holyWaterCount">3</span>
+                        </div>
+                        <div class="item">
+                            <i class="fas fa-circle binding-icon"></i>
+                            <span>Binding Circles: </span>
+                            <span id="bindingCircleCount">2</span>
+                        </div>
+                        <div class="item">
+                            <i class="fas fa-wine-bottle"></i>
+                            <span>Sanity Potions: </span>
+                            <span id="potionCount">1</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Demon Codex -->
+                <div class="codex-card">
+                    <h3><i class="fas fa-book-dead"></i> DEMON CODEX</h3>
+                    <div class="codex-entries" id="codexEntries">
+                        <div class="empty-codex">No demons captured yet</div>
+                    </div>
+                </div>
+
+                <!-- Game Instructions -->
+                <div class="instructions-card">
+                    <h3><i class="fas fa-scroll"></i> HUNTER'S GUIDE</h3>
+                    <ul>
+                        <li>Attack demons to reduce their health</li>
+                        <li>Weaken to &lt;20% health to enable capture</li>
+                        <li>Capturing requires Binding Circles</li>
+                        <li>Killing gives immediate gold rewards</li>
+                        <li>Low sanity reduces your accuracy</li>
+                        <li>Use Holy Water on demons weak to Holy</li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+
+        <!-- Contract Status -->
+        <div class="contract-status">
+            <h3><i class="fas fa-file-contract"></i> ACTIVE CONTRACT</h3>
+            <div class="contract-details">
+                <p id="contractText">Contract #001: Eliminate the Shadow Imp haunting the Old Cathedral</p>
+                <div class="contract-rewards">
+                    <span>Reward: <span id="contractReward">150</span> gold</span>
+                    <span>Bonus for capture: +1 Demon Codex entry</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Over Modal -->
+        <div class="modal" id="gameOverModal">
+            <div class="modal-content">
+                <h2><i class="fas fa-tombstone"></i> HUNTER FALLEN</h2>
+                <p id="gameOverMessage">Your sanity has broken...</p>
+                <button class="btn restart-btn" id="restartBtn">
+                    <i class="fas fa-redo"></i> Start New Hunt
+                </button>
+            </div>
+        </div>
+
+        <!-- Victory Modal -->
+        <div class="modal" id="victoryModal">
+            <div class="modal-content victory">
+                <h2><i class="fas fa-trophy"></i> CONTRACT COMPLETE</h2>
+                <p id="victoryMessage">Demon defeated!</p>
+                <div class="reward-details">
+                    <p>Gold earned: <span id="rewardGold">0</span></p>
+                    <p id="captureRewardText" style="display: none;">Demon added to Codex!</p>
+                </div>
+                <button class="btn next-contract-btn" id="nextContractBtn">
+                    <i class="fas fa-forward"></i> Accept Next Contract
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game State
+        let gameState = {
+            player: {
+                health: 100,
+                maxHealth: 100,
+                sanity: 100,
+                maxSanity: 100,
+                gold: 500,
+                demonsCaptured: 0
+            },
+            currentDemon: null,
+            contractCount: 1,
+            isGameOver: false,
+            isCombatActive: false
+        };
+
+        // Demon Database
+        const demonTypes = [
+            {
+                id: 1,
+                name: "Shadow Imp",
+                type: "Lesser Demon",
+                baseHealth: 80,
+                weakness: "Holy",
+                icon: "fas fa-ghost",
+                sanityDrain: 5,
+                killReward: 150,
+                captureDifficulty: 30
+            },
+            {
+                id: 2,
+                name: "Hell Knight",
+                type: "Greater Demon",
+                baseHealth: 150,
+                weakness: "Ice",
+                icon: "fas fa-helmet-battle",
+                sanityDrain: 10,
+                killReward: 300,
+                captureDifficulty: 50
+            },
+            {
+                id: 3,
+                name: "Soul Weaver",
+                type: "Greater Demon",
+                baseHealth: 120,
+                weakness: "Fire",
+                icon: "fas fa-spider",
+                sanityDrain: 8,
+                killReward: 250,
+                captureDifficulty: 40
+            },
+            {
+                id: 4,
+                name: "Void Stalker",
+                type: "Archdemon",
+                baseHealth: 200,
+                weakness: "Light",
+                icon: "fas fa-eye",
+                sanityDrain: 15,
+                killReward: 500,
+                captureDifficulty: 70
+            }
+        ];
+
+        // Weakness icons mapping
+        const weaknessIcons = {
+            "Holy": "fas fa-sun",
+            "Ice": "fas fa-snowflake",
+            "Fire": "fas fa-fire",
+            "Light": "fas fa-star"
+        };
+
+        // Inventory
+        let inventory = {
+            holyWater: 3,
+            bindingCircles: 2,
+            sanityPotions: 1
+        };
+
+        // Codex entries
+        let codex = [];
+
+        // DOM Elements
+        const healthValue = document.getElementById('healthValue');
+        const healthFill = document.getElementById('healthFill');
+        const sanityValue = document.getElementById('sanityValue');
+        const sanityFill = document.getElementById('sanityFill');
+        const goldValue = document.getElementById('goldValue');
+        const capturedValue = document.getElementById('capturedValue');
+
+        const demonName = document.getElementById('demonName');
+        const demonType = document.getElementById('demonType');
+        const demonHealthValue = document.getElementById('demonHealthValue');
+        const demonHealthFill = document.getElementById('demonHealthFill');
+        const demonWeakness = document.getElementById('demonWeakness');
+        const sanityDrainValue = document.getElementById('sanityDrainValue');
+        const demonIcon = document.getElementById('demonIcon');
+
+        const attackBtn = document.getElementById('attackBtn');
+        const captureBtn = document.getElementById('captureBtn');
+        const executeBtn = document.getElementById('executeBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        const combatLog = document.getElementById('combatLog');
+
+        const holyWaterCount = document.getElementById('holyWaterCount');
+        const bindingCircleCount = document.getElementById('bindingCircleCount');
+        const potionCount = document.getElementById('potionCount');
+
+        const codexEntries = document.getElementById('codexEntries');
+
+        const contractText = document.getElementById('contractText');
+        const contractReward = document.getElementById('contractReward');
+
+        const gameOverModal = document.getElementById('gameOverModal');
+        const victoryModal = document.getElementById('victoryModal');
+        const restartBtn = document.getElementById('restartBtn');
+        const nextContractBtn = document.getElementById('nextContractBtn');
+
+        // Initialize Game
+        function initGame() {
+            updatePlayerUI();
+            generateNewContract();
+            updateInventoryUI();
+            
+            // Add event listeners
+            attackBtn.addEventListener('click', playerAttack);
+            captureBtn.addEventListener('click', attemptCapture);
+            executeBtn.addEventListener('click', executeDemon);
+            nextBtn.addEventListener('click', nextContract);
+            restartBtn.addEventListener('click', restartGame);
+            nextContractBtn.addEventListener('click', nextContract);
+        }
+
+        // Generate new demon contract
+        function generateNewContract() {
+            const demonIndex = Math.floor(Math.random() * demonTypes.length);
+            const demon = {...demonTypes[demonIndex]};
+            
+            // Add some variation to health
+            demon.health = demon.baseHealth + Math.floor(Math.random() * 20);
+            demon.maxHealth = demon.health;
+            
+            gameState.currentDemon = demon;
+            gameState.isCombatActive = true;
+            
+            updateDemonUI();
+            enableButtons();
+            
+            contractText.textContent = `Contract #${gameState.contractCount}: Eliminate the ${demon.name} haunting the forbidden ruins`;
+            contractReward.textContent = demon.killReward;
+            
+            addToLog(`Contract accepted: Hunt the ${demon.name}`);
+            addToLog(`Weakness detected: ${demon.weakness}`);
+            addToLog("Prepare for battle!");
+        }
+
+        // Update player UI
+        function updatePlayerUI() {
+            const player = gameState.player;
+            
+            healthValue.textContent = player.health;
+            healthFill.style.width = `${(player.health / player.maxHealth) * 100}%`;
+            
+            sanityValue.textContent = player.sanity;
+            sanityFill.style.width = `${(player.sanity / player.maxSanity) * 100}%`;
+            
+            goldValue.textContent = player.gold;
+            capturedValue.textContent = player.demonsCaptured;
+        }
+
+        // Update demon UI
+        function updateDemonUI() {
+            const demon = gameState.currentDemon;
+            if (!demon) return;
+            
+            demonName.textContent = demon.name;
+            demonType.textContent = `Type: ${demon.type}`;
+            demonHealthValue.textContent = `${demon.health}/${demon.maxHealth}`;
+            demonHealthFill.style.width = `${(demon.health / demon.maxHealth) * 100}%`;
+            
+            const weaknessIcon = weaknessIcons[demon.weakness] || "fas fa-question";
+            demonWeakness.innerHTML = `<i class="${weaknessIcon}"></i> ${demon.weakness}`;
+            
+            sanityDrainValue.textContent = demon.sanityDrain;
+            demonIcon.innerHTML = `<i class="${demon.icon}"></i>`;
+        }
+
+        // Update inventory UI
+        function updateInventoryUI() {
+            holyWaterCount.textContent = inventory.holyWater;
+            bindingCircleCount.textContent = inventory.bindingCircles;
+            potionCount.textContent = inventory.sanityPotions;
+        }
+
+        // Add message to combat log
+        function addToLog(message) {
+            const logEntry = document.createElement('div');
+            logEntry.className = 'log-entry';
+            logEntry.textContent = `[${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}] ${message}`;
+            
+            combatLog.appendChild(logEntry);
+            combatLog.scrollTop = combatLog.scrollHeight;
+        }
+
+        // Enable/disable buttons based on game state
+        function enableButtons() {
+            const demon = gameState.currentDemon;
+            if (!demon) return;
+            
+            attackBtn.disabled = false;
+            
+            // Enable capture if demon health < 20% and player has binding circles
+            if (demon.health <= demon.maxHealth * 0.2 && inventory.bindingCircles > 0) {
+                captureBtn.disabled = false;
+            } else {
+                captureBtn.disabled = true;
+            }
+            
+            // Enable execute if demon health < 30%
+            executeBtn.disabled = !(demon.health <= demon.maxHealth * 0.3);
+            
+            // Enable next button if combat is not active
+            nextBtn.disabled = gameState.isCombatActive;
+        }
+
+        // Player attack
+        function playerAttack() {
+            if (!gameState.currentDemon || gameState.isGameOver) return;
+            
+            const demon = gameState.currentDemon;
+            const player = gameState.player;
+            
+            // Calculate damage (affected by sanity)
+            let baseDamage = 15 + Math.floor(Math.random() * 10);
+            if (player.sanity < 30) {
+                baseDamage = Math.floor(baseDamage * 0.7);
+                addToLog("Low sanity! Damage reduced.");
+            }
+            
+            // Check for critical hit (5% chance)
+            const isCritical = Math.random() < 0.05;
+            if (isCritical) {
+                baseDamage *= 2;
+                addToLog("CRITICAL HIT!");
+            }
+            
+            demon.health -= baseDamage;
+            if (demon.health < 0) demon.health = 0;
+            
+            addToLog(`You attack for ${baseDamage} damage!`);
+            
+            // Demon drains sanity
+            player.sanity -= demon.sanityDrain;
+            if (player.sanity < 0) player.sanity = 0;
+            
+            addToLog(`${demon.name} drains ${demon.sanityDrain} sanity.`);
+            
+            // Demon counterattack (30% chance)
+            if (demon.health > 0 && Math.random() < 0.3) {
+                const demonDamage = 5 + Math.floor(Math.random() * 10);
+                player.health -= demonDamage;
+                if (player.health < 0) player.health = 0;
+                
+                addToLog(`${demon.name} counterattacks for ${demonDamage} damage!`);
+            }
+            
+            updatePlayerUI();
+            updateDemonUI();
+            enableButtons();
+            
+            // Check for demon defeat
+            if (demon.health <= 0) {
+                demonDefeated('killed');
+            }
+            
+            // Check for player defeat
+            checkGameOver();
+        }
+
+        // Attempt to capture demon
+        function attemptCapture() {
+            const demon = gameState.currentDemon;
+            const player = gameState.player;
+            
+            if (!demon || inventory.bindingCircles <= 0) return;
+            
+            // Use a binding circle
+            inventory.bindingCircles--;
+            
+            // Calculate capture chance
+            const captureChance = 60 - demon.captureDifficulty + (player.sanity > 50 ? 20 : 0);
+            const roll = Math.random() * 100;
+            
+            if (roll <= captureChance) {
+                // Capture successful
+                addToLog(`You successfully capture the ${demon.name}!`);
+                
+                // Add to codex
+                addToCodex(demon);
+                player.demonsCaptured++;
+                
+                demonDefeated('captured');
+            } else {
+                // Capture failed
+                addToLog(`Capture failed! The ${demon.name} breaks free!`);
+                
+                // Demon gets enraged
+                const rageDamage = 10 + Math.floor(Math.random() * 10);
+                player.health -= rageDamage;
+                addToLog(`Enraged ${demon.name} attacks for ${rageDamage} damage!`);
+                
+                updatePlayerUI();
+                checkGameOver();
+            }
+            
+            updateInventoryUI();
+            enableButtons();
+        }
+
+        // Execute demon (instant kill when low health)
+        function executeDemon() {
+            const demon = gameState.currentDemon;
+            
+            if (!demon || demon.health > demon.maxHealth * 0.3) return;
+            
+            addToLog(`You execute the weakened ${demon.name}!`);
+            demonDefeated('executed');
+        }
+
+        // Demon defeated handler
+        function demonDefeated(method) {
+            const demon = gameState.currentDemon;
+            const player = gameState.player;
+            
+            gameState.isCombatActive = false;
+            
+            // Calculate rewards
+            let goldEarned = demon.killReward;
+            let message = `${demon.name} defeated!`;
+            
+            if (method === 'captured') {
+                goldEarned = Math.floor(demon.killReward * 0.7); // Less gold for capture
+                message = `${demon.name} captured and added to Codex!`;
+            } else if (method === 'executed') {
+                goldEarned = Math.floor(demon.killReward * 1.2); // Bonus for execution
+                message = `${demon.name} executed! Bonus gold earned.`;
+            }
+            
+            player.gold += goldEarned;
+            
+            // Show victory modal
+            document.getElementById('victoryMessage').textContent = message;
+            document.getElementById('rewardGold').textContent = goldEarned;
+            
+            if (method === 'captured') {
+                document.getElementById('captureRewardText').style.display = 'block';
+            } else {
+                document.getElementById('captureRewardText').style.display = 'none';
+            }
+            
+            victoryModal.style.display = 'flex';
+            
+            updatePlayerUI();
+            disableButtons();
+        }
+
+        // Add demon to codex
+        function addToCodex(demon) {
+            const demonEntry = {
+                name: demon.name,
+                type: demon.type,
+                weakness: demon.weakness,
+                dateCaptured: new Date().toLocaleDateString()
+            };
+            
+            codex.push(demonEntry);
+            updateCodexUI();
+        }
+
+        // Update codex UI
+        function updateCodexUI() {
+            codexEntries.innerHTML = '';
+            
+            if (codex.length === 0) {
+                codexEntries.innerHTML = '<div class="empty-codex">No demons captured yet</div>';
+                return;
+            }
+            
+            codex.forEach(entry => {
+                const entryDiv = document.createElement('div');
+                entryDiv.className = 'demon-entry';
+                entryDiv.innerHTML = `
+                    <h4>${entry.name}</h4>
+                    <p>Type: ${entry.type}</p>
+                    <p>Weakness: ${entry.weakness}</p>
+                    <p>Captured: ${entry.dateCaptured}</p>
+                `;
+                codexEntries.appendChild(entryDiv);
+            });
+        }
+
+        // Check for game over
+        function checkGameOver() {
+            const player = gameState.player;
+            
+            if (player.health <= 0) {
+                gameOver("Your health has reached zero. The darkness consumes you...");
+            } else if (player.sanity <= 0) {
+                gameOver("Your sanity has broken. You become one with the madness...");
+            }
+        }
+
+        // Game over handler
+        function gameOver(message) {
+            gameState.isGameOver = true;
+            document.getElementById('gameOverMessage').textContent = message;
+            gameOverModal.style.display = 'flex';
+            disableButtons();
+        }
+
+        // Disable all action buttons
+        function disableButtons() {
+            attackBtn.disabled = true;
+            captureBtn.disabled = true;
+            executeBtn.disabled = true;
+            nextBtn.disabled = true;
+        }
+
+        // Restart game
+        function restartGame() {
+            gameState = {
+                player: {
+                    health: 100,
+                    maxHealth: 100,
+                    sanity: 100,
+                    maxSanity: 100,
+                    gold: 500,
+                    demonsCaptured: 0
+                },
+                currentDemon: null,
+                contractCount: 1,
+                isGameOver: false,
+                isCombatActive: false
+            };
+            
+            inventory = {
+                holyWater: 3,
+                bindingCircles: 2,
+                sanityPotions: 1
+            };
+            
+            codex = [];
+            
+            gameOverModal.style.display = 'none';
+            victoryModal.style.display = 'none';
+            
+            updatePlayerUI();
+            updateCodexUI();
+            updateInventoryUI();
+            
+            generateNewContract();
+        }
+
+        // Next contract
+        function nextContract() {
+            victoryModal.style.display = 'none';
+            gameState.contractCount++;
+            
+            // Restore some sanity
+            gameState.player.sanity = Math.min(gameState.player.sanity + 20, gameState.player.maxSanity);
+            
+            // Small chance to find items
+            if (Math.random() < 0.3) {
+                inventory.bindingCircles++;
+                addToLog("Found a Binding Circle while exploring!");
+            }
+            
+            // Small chance to find sanity potion
+            if (Math.random() < 0.2) {
+                inventory.sanityPotions++;
+                addToLog("Found a Sanity Potion!");
+            }
+            
+            updatePlayerUI();
+            updateInventoryUI();
+            generateNewContract();
+        }
+
+        // Initialize game when page loads
+        window.addEventListener('DOMContentLoaded', initGame);
+    </script>
+</body>
+</html>
