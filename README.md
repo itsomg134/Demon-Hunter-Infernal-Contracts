@@ -11,7 +11,7 @@
 
 **Demon Hunter: Infernal Contracts** is a procedurally generated horror-action RPG where you track, fight, and capture supernatural entities across multiple realms. Every encounter presents a strategic choice: execute demons for immediate rewards or risk capturing them for long-term power and secrets.
 
-![Gameplay Screenshot](https://via.placeholder.com/800x400/222222/666666?text=Demon+Hunter+Gameplay)
+<img width="1869" height="1992" alt="image" src="https://github.com/user-attachments/assets/45f5ca4d-eade-4683-b0d0-c40648d11259" />
 
 ## ✨ Features
 
