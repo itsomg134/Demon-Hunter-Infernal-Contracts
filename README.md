@@ -159,7 +159,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact
 
-**Project Lead:** [Your Name](mailto:your.email@example.com)  
-**Discord:** [Join our community](https://discord.gg/invite-link)  
-**Twitter:** [@DemonHunterGame](https://twitter.com/DemonHunterGame)
+Om Gedam
 
+GitHub: @itsomg134
+
+Email: omgedam123098@gmail.com
+
+Twitter (X): @omgedam
+
+LinkedIn: Om Gedam
+
+Portfolio: https://ogworks.lovable.app
